@@ -1,21 +1,39 @@
-//  В ньому буде знаходитись логіка
-//  роботи вашого express-серверу.
+import express from 'express';
+import pino from 'pino-http';
+import cors from 'cors';
+import dotenv from 'dotenv';
+dotenv.config();
 
-// в якій буде створюватись express сервер. Ця функція має в себе включати:
+const PORT = process.env.PORT || 3000;
+export const setupServer = () => {
+  const app = express();
+  app.use(express.json());
+  app.use(cors());
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
+  app.get('/', (req, res) => {
+    res.json({
+      message: `${new Date().toLocaleString()}`,
+    });
+  });
+  app.use((req, res) => {
+    res.status(404).json({
+      message: 'Not found',
+    });
+  });
 
-// Створення серверу за допомогою виклику express()
-// Налаштування cors та логгера pino.
-// Обробку неіснуючих роутів (повертає статус 404 і відповідне повідомлення)
-// {
-//   message: 'Not found',
-// }
+  app.use((err, req, res, _next) => {
+    console.log(err.stack);
 
-// 4. Запуск серверу на порті, вказаному через змінну оточення PORT або 3000, якщо такої змінної не зазначено
+    res.status(500).json({ message: 'Internal Server Error' });
+  });
 
-// 5. При вдалому запуску сервера виводити в консоль рядок “Server is running on port {PORT}”, де {PORT} - це номер вашого порту.
-
-// Не забудьте вказати змінну оточення в файлі .env.example
-
-// Створіть файл src/index.js. Імпортуйте і викличте у ньому функцію setupServer.
-
-export const setupServer = () => {};
+  app.listen(PORT, () => {
+    console.log(`Server is running on port  http://localhost:${PORT}`);
+  });
+};
