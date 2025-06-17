@@ -19,4 +19,3 @@
 // Створіть файл src/index.js. Імпортуйте і викличте у ньому функцію setupServer.
 
 export const setupServer = () => {};
-console.log();
