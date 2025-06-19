@@ -2,6 +2,7 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { getAllContacts } from './services/contacts.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -21,6 +22,15 @@ export const setupServer = () => {
       message: `${new Date().toLocaleString()}`,
     });
   });
+
+  app.get('/contacts', async (req, res) => {
+    const contacts = await getAllContacts();
+    res.status(200).json({
+      data: contacts,
+      message: 'Successfully found contacts!',
+    });
+  });
+
   app.use((req, res) => {
     res.status(404).json({
       message: 'Not found',
