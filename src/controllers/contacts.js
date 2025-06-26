@@ -40,17 +40,17 @@ export const createContactController = async (req, res) => {
 
   res.status(201).json({
     status: 201,
-    message: `Successfully created a student!`,
+    message: `Successfully created a contact!`,
     data: contact,
   });
 };
 
-export const deleteContactController = async (req, res, nest) => {
+export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const contact = await deleteContact(contactId);
 
   if (!contact) {
-    nest(createHttpError(404, 'Contact not found'));
+    next(createHttpError(404, 'Contact not found'));
     return;
   }
   res.status(204).send();
@@ -81,7 +81,7 @@ export const patchContactController = async (req, res, next) => {
   }
   res.status(200).json({
     status: 200,
-    message: `Successfully patched a student!`,
+    message: `Successfully patched a contact!`,
     data: result.contact,
   });
 };
