@@ -12,7 +12,7 @@ const contactsSchema = new Schema(
     email: {
       type: String,
     },
-    isFavorite: {
+    isFavourite: {
       type: Boolean,
       default: false,
     },
@@ -29,4 +29,5 @@ const contactsSchema = new Schema(
   },
 );
 
-export const contactsCollection = model('contacts', contactsSchema);
+export const contactsCollection = model('Contact', contactsSchema, 'contacts');
+// export const contactsCollection = model('contacts', contactsSchema);
