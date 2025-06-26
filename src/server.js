@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 // import { getContactId } from './services/contacts.js';
 import contactsRouter from './routers/contacts.js';
 import contactIdRouter from './routers/contacts.js';
+import { errorHandler } from './middleware/errorHandler.js';
+import { notFoundHandler } from './middleware/notFoundHandler.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -26,7 +28,8 @@ export const setupServer = () => {
   });
   app.use(contactsRouter);
   app.use(contactIdRouter);
-
+  app.use(errorHandler);
+  app.use(notFoundHandler);
   // app.get('/contacts', async (req, res) => {
   //   const contacts = await getAllContacts();
   //   res.status(200).json({
