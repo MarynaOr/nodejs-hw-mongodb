@@ -4,6 +4,7 @@ import {
   deleteContact,
   getAllContacts,
   getContactId,
+  updateContact,
 } from '../services/contacts.js';
 
 export const getContactController = async (req, res, next) => {
@@ -49,8 +50,24 @@ export const deleteContactController = async (req, res, nest) => {
   const contact = await deleteContact(contactId);
 
   if (!contact) {
-    nest(createHttpError(404, 'Student not found'));
+    nest(createHttpError(404, 'Contact not found'));
     return;
   }
   res.status(204).send();
+};
+export const upsertContactController = async (req, res, next) => {
+  const { contactId } = req.params;
+  const result = await updateContact(contactId, req.body, {
+    upsert: true,
+  });
+  if (!result) {
+    next(createHttpError(404, 'Contact not found'));
+    return;
+  }
+  const status = result.isNew ? 201 : 200;
+  res.status(status).json({
+    status,
+    message: `Successfully upserted a contact!`,
+    data: result.contact,
+  });
 };
