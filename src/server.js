@@ -26,6 +26,7 @@ export const setupServer = () => {
   });
   app.use(contactsRouter);
   app.use(contactIdRouter);
+
   // app.get('/contacts', async (req, res) => {
   //   const contacts = await getAllContacts();
   //   res.status(200).json({
