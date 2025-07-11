@@ -2,10 +2,11 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import contactsRouter from './routers/contacts.js';
+// import contactsRouter from './routers/contacts.js';
 import contactIdRouter from './routers/contacts.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
+import router from './routers/index.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -25,7 +26,7 @@ export const setupServer = () => {
       message: `${new Date().toLocaleString()}`,
     });
   });
-  app.use(contactsRouter);
+  app.use(router);
   app.use(contactIdRouter);
   app.use(errorHandler);
   app.use(notFoundHandler);
