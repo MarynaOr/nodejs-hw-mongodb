@@ -2,10 +2,12 @@ import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import contactsRouter from './routers/contacts.js';
-import contactIdRouter from './routers/contacts.js';
+// import contactsRouter from './routers/contacts.js';
+// import contactIdRouter from './routers/contacts.js';
 import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
+import router from './routers/index.js';
+import cookieParser from 'cookie-parser';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -13,6 +15,7 @@ export const setupServer = () => {
   const app = express();
   app.use(express.json());
   app.use(cors());
+  app.use(cookieParser());
   app.use(
     pino({
       transport: {
@@ -25,8 +28,8 @@ export const setupServer = () => {
       message: `${new Date().toLocaleString()}`,
     });
   });
-  app.use(contactsRouter);
-  app.use(contactIdRouter);
+  app.use(router);
+  // app.use(contactIdRouter);
   app.use(errorHandler);
   app.use(notFoundHandler);
 
