@@ -14,8 +14,11 @@ import {
   updateValidationContact,
 } from '../validation/contacts.js';
 import { isValidId } from '../middleware/isValidId.js';
+import { authenticate } from '../middleware/authenticate.js';
 
 const router = Router();
+router.use(authenticate);
+
 router.get('/', ctrlWrapper(getContactController));
 router.get('/:contactId', isValidId, ctrlWrapper(getIdContactController));
 router.post(

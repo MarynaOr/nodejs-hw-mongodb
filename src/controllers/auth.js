@@ -48,7 +48,7 @@ export const logoutUserController = async (req, res) => {
 };
 
 const setupSession = (res, session) => {
-  res.cookie('refreshTOken', {
+  res.cookie('refreshToken', {
     httpOnly: true,
     expires: new Date(Date.now() + THIRTY_DAYS),
   });
