@@ -3,7 +3,10 @@ import { UserCollection } from '../db/models/user.js';
 import bcrypt from 'bcrypt';
 import { SessionCollection } from '../db/models/session.js';
 import { randomBytes } from 'crypto';
-import { FIFTEEN_MINUTES, THIRTY_DAYS } from '../constants/index.js';
+import { FIFTEEN_MINUTES, SMTP, THIRTY_DAYS } from '../constants/index.js';
+import jwt from 'jsonwebtoken';
+import { getEnvVar } from '../utils/getEnvVar.js';
+import { sendEmail } from '../utils/sendMail.js';
 
 export const registerUser = async (payload) => {
   const user = await UserCollection.findOne({ email: payload.email });
@@ -83,5 +86,33 @@ export const refreshUserSession = async ({ sessionId, refreshToken }) => {
   return await SessionCollection.create({
     userId: session.userId,
     ...newSession,
+  });
+};
+
+export const requestResetToken = async (email) => {
+  const user = await UserCollection.findOne({ email });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const resetToken = jwt.sign(
+    {
+      sub: user._id,
+      email,
+    },
+    getEnvVar('JWT_SECRET'),
+    {
+      expiresIn: '5m',
+    },
+  );
+
+  const frontendDomain = getEnvVar('APP_DOMAIN');
+  const resetUrl = `${frontendDomain}/reset-password?token=${resetToken}`;
+  await sendEmail({
+    from: getEnvVar(SMTP.SMTP_FROM),
+    to: email,
+    subject: 'Reset your password',
+    html: `<p>Click <a href="${resetUrl}">here</a> to reset your password!</p>`,
   });
 };
