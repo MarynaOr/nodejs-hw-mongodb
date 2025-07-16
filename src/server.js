@@ -8,6 +8,7 @@ import { errorHandler } from './middleware/errorHandler.js';
 import { notFoundHandler } from './middleware/notFoundHandler.js';
 import router from './routers/index.js';
 import cookieParser from 'cookie-parser';
+import { UPLOAD_DIR } from './constants/index.js';
 dotenv.config();
 
 const PORT = process.env.PORT || 3000;
@@ -30,6 +31,9 @@ export const setupServer = () => {
   });
   app.use(router);
   // app.use(contactIdRouter);
+
+  app.use('/uploads', express.static(UPLOAD_DIR));
+
   app.use(errorHandler);
   app.use(notFoundHandler);
 
