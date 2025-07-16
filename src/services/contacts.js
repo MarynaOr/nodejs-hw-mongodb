@@ -59,7 +59,7 @@ export const updateContact = async (
 ) => {
   const updatedContact = await contactsCollection.findOneAndUpdate(
     { _id: contactId, userId },
-    payload,
+    { $set: payload },
     {
       new: true,
       ...options,
